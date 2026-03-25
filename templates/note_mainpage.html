@@ -1,0 +1,12 @@
+<html>
+<body>
+    <h1>My notes</h1>
+    {% for note in notes %}
+        <div style="border: 1px solid black;" class="{{note[3]}}">  <!-- We can worry about the style of this later-->
+            <h2>{{note[1]}}</h2>
+            <p>{{note[2]}}</p>
+            <small>Created: {{ note[4] }} | Updated: {{ note[5] }}</small>
+        </div>
+    {% endfor %}
+</body>
+</html>
