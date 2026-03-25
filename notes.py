@@ -11,6 +11,9 @@ load_dotenv()
 DB_NAME = os.getenv("DB_NAME")
 
 # ------------------------- HELPER FUNCTIONS -------------------#
+def clear_db(cur):
+     cur.execute("DROP TABLE tab")
+
 def change_content(cur,content):
         cur.execute("UPDATE tab SET content = ? WHERE title = ? AND content = ? AND category = ?",(content,self.title,self.content,self.category))
 
@@ -48,8 +51,24 @@ def note_display():
     cur.execute("SELECT * FROM tab")
     displayed_notes = cur.fetchall()
     conn.close()        # closing the connection
-    return flask.render_template("note_mainpage.html",notes=displayed_notes)
+    return """
+            <html>
+            <form method = "POST" action = '/notes'>
+                <input type = "text" name = "title">
+                <button type = "submit"> Send </button>
+            </form>
+            </html>
+             """ + flask.render_template("note_mainpage.html",notes=displayed_notes)
 
+
+@app.route('/notes',methods=['POST'])
+def post_note():
+    note = flask.request.form['title']
+    conn = get_db()                            # JUST A PROTOTYPE FOR NOW. ONLY TAKES IN TITLE
+    cur = conn.cursor()
+    create_note(cur,note,'something','cool','2005-06-07')
+    conn.commit()
+    return flask.redirect('/')
 
 
 
