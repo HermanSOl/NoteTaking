@@ -17,3 +17,15 @@ class Note:
     
     def change_category(category):
         self.category = category
+
+
+
+notes = _sqlite3.connect("note_database.db")
+cur = notes.cursor()
+
+cur.execute("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, title TEXT,content TEXT, category TEXT)")
+cur.execute("INSERT INTO notes (title,content,category) VALUES (?,?,?)",("First Note!","Finish this Task","Default"))
+
+notes.commit()
+cur.execute("SELECT * FROM notes")
+print(cur.fetchall())
