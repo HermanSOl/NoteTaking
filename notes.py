@@ -98,6 +98,20 @@ def update_note(title):
     conn.close()
     return flask.redirect('/notes')
 
+@app.route('/notes/delete/<string:title>',methods=['DELETE'])
+def delete_note(title):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM tab WHERE title = ?",(title,))
+    if not cur.fetchall():
+        conn.close()
+        return flask.jsonify({"error": "No such note exists"}), 404
+
+    cur.execute("DELETE FROM tab WHERE title = ?", (title,))
+    conn.commit()
+    conn.close()
+    return flask.redirect('/notes')
+
 
 
 app.config['SERVER NAME'] = f"notes.localhost"
