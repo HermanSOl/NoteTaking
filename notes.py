@@ -24,7 +24,7 @@ def create_note(cur,title,content,category,created):
     # if(1 != 1): 
     #     #some condition              # TODO: take care of the case where title,content or category are invalid
     cur.execute("SELECT * FROM tab WHERE title = ? AND content = ?", (title,content))
-    if cur.fetchone():
+    if cur.fetchall():
         return "Already exists"
     cur.execute("INSERT OR IGNORE INTO tab (title,content,category,created_at,updated_at) VALUES (?,?,?,?,?)",(title,content,category,created,created)) 
 
@@ -59,7 +59,7 @@ def note_display():
     conn.close()        # closing the connection
     return """
             <html>
-            <form method = "POST" action = '/notes'>
+            <form method = "POST" action = '/notes/post'>
                 <input type = "text" name = "title">
                 <button type = "submit"> Send </button>
             </form>
@@ -67,17 +67,36 @@ def note_display():
              """ + flask.render_template("note_mainpage.html",notes=displayed_notes)
 
 
-@app.route('/notes',methods=['POST'])
+@app.route('/notes/post',methods=['POST'])
 def post_note():
     note = flask.request.form['title']
     conn = get_db()                            # JUST A PROTOTYPE FOR NOW. ONLY TAKES IN TITLE
     cur = conn.cursor()
     create_note(cur,note,'something','cool','2005-06-07')
     conn.commit()
-    return flask.redirect('/')
+    return flask.redirect('/notes')
 
+@app.route('/notes/<string:title>',methods=['PUT'])
+def update_note(title):
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM tab WHERE title = ?",(title,))
+    if not cur.fetchall():
+        conn.close()
+        return flask.jsonify({"error": "No such note exists"}), 404
+    
+     
+    input = flask.request.get_json()
+    if 'title' in input:
+        cur.execute("UPDATE tab SET title = ? WHERE title = ?", (input['title'], title))
+    if 'content' in input:
+        cur.execute("UPDATE tab SET content = ? WHERE title = ?", (input['content'], title))
+    if 'category' in input:
+        cur.execute("UPDATE tab SET category = ? WHERE title = ?", (input['category'], title))
 
-
+    conn.commit()
+    conn.close()
+    return flask.redirect('/notes')
 
 
 
