@@ -1,4 +1,4 @@
-import _sqlite3
+import sqlite3
 import os
 import flask
 from dotenv import load_dotenv
@@ -29,14 +29,14 @@ def create_note(cur,title,content,category,created):
     cur.execute("INSERT OR IGNORE INTO tab (title,content,category,created_at,updated_at) VALUES (?,?,?,?,?)",(title,content,category,created,created)) 
 
 def get_db():
-    copy = _sqlite3.connect(DB_NAME)
+    copy = sqlite3.connect(DB_NAME)
     return copy
 
 #-----------------------------------------------------------------------------#
 
 # DB Initialization
 def init_db():
-    tab = _sqlite3.connect(DB_NAME)
+    tab = sqlite3.connect(DB_NAME)
     cur = tab.cursor()
     cur.execute("CREATE TABLE IF NOT EXISTS tab (id INTEGER PRIMARY KEY, title TEXT,content TEXT, category TEXT,created_at DATE,updated_at DATE)")
     tab.close()
@@ -44,12 +44,18 @@ def init_db():
 init_db()
 
 app = flask.Flask(__name__)
-@app.route('/',methods=["GET"])
+@app.route('/notes',methods=["GET"])
 def note_display():
     conn = get_db()         # we need to get only one connection to db per one request
     cur = conn.cursor()
-    cur.execute("SELECT * FROM tab")
-    displayed_notes = cur.fetchall()
+
+    titles = flask.request.args.get('title')
+    if titles:
+        cur.execute("SELECT * FROM tab WHERE title = ?", (titles,))
+        displayed_notes=cur.fetchall()
+    else:
+        cur.execute("SELECT * FROM tab ORDER BY created_at DESC")
+        displayed_notes = cur.fetchall()
     conn.close()        # closing the connection
     return """
             <html>
@@ -69,6 +75,9 @@ def post_note():
     create_note(cur,note,'something','cool','2005-06-07')
     conn.commit()
     return flask.redirect('/')
+
+
+
 
 
 
