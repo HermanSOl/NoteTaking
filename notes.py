@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import flask
+from datetime import datetime
 from dotenv import load_dotenv
 
  # For now this is just a simple note with title, content and category
@@ -60,7 +61,11 @@ def note_display():
     return """
             <html>
             <form method = "POST" action = '/notes/post'>
-                <input type = "text" name = "title">
+                Title <input type = "text" name = "title">
+                <br>
+                Content <input type = "text" name = "content">
+                <br>
+                Category<input type = "text" name = "category">
                 <button type = "submit"> Send </button>
             </form>
             </html>
@@ -69,10 +74,14 @@ def note_display():
 
 @app.route('/notes/post',methods=['POST'])
 def post_note():
+    now = datetime.now().strftime("%Y-%m-%d")
+
     note = flask.request.form['title']
+    content = flask.request.form['content']
+    category = flask.request.form['category']
     conn = get_db()                            # JUST A PROTOTYPE FOR NOW. ONLY TAKES IN TITLE
     cur = conn.cursor()
-    create_note(cur,note,'something','cool','2005-06-07')
+    create_note(cur,note,content,category,now)
     conn.commit()
     return flask.redirect('/notes')
 
