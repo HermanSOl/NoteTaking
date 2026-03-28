@@ -12,13 +12,15 @@
 <script>
 function submitUpdate(e) {
     e.preventDefault();
-    const title = document.getElementById('update-title').value;
+    const update_title = document.getElementById('update-title').value;
+    const title = document.getElementById('new-title').value;
     const body = {};
-    const content = document.getElementById('update-content').value;
-    const category = document.getElementById('update-category').value;
+    const content = document.getElementById('new-content').value;
+    const category = document.getElementById('new-category').value;
+    if (title) body.title = title;
     if (content) body.content = content;
     if (category) body.category = category;
-    fetch('/notes/' + encodeURIComponent(title), {
+    fetch('/notes/' + encodeURIComponent(update_title), {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)

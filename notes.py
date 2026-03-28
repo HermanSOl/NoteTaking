@@ -70,8 +70,9 @@ def note_display():
             </form>
             <form id="update-form" onsubmit="submitUpdate(event)">
                 Update note - Current title <input type="text" id="update-title">
-                New content <input type="text" id="update-content">
-                New category <input type="text" id="update-category">
+                New title <input type = "text" id = "new-title">
+                New content <input type="text" id="new-content">
+                New category <input type="text" id="new-category">
                 <button type="submit"> Update </button>
             </form>
             <form id="delete-form" onsubmit="submitDelete(event)">
