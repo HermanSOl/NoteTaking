@@ -57,16 +57,16 @@ def note_display():
     else:
         cur.execute("SELECT * FROM tab ORDER BY created_at DESC")
         displayed_notes = cur.fetchall()
-    conn.close()        # closing the connection
+    conn.close()        # closing the connection 
     return """
             <html>
             <form method="POST" action='/notes/post'>
-                Title <input type="text" name="title">
+                Title <input type="text" name="title">   
                 <br>
                 Content <input type="text" name="content">
                 <br>
                 Category <input type="text" name="category">
-                <button type="submit"> Send </button>
+                <button type="submit"> Send </button>          
             </form>
             <form id="update-form" onsubmit="submitUpdate(event)">
                 Update note - Current title <input type="text" id="update-title">
@@ -81,7 +81,7 @@ def note_display():
             </form>
             </html>
              """ + flask.render_template("note_mainpage.html",notes=displayed_notes)
-
+    # above is quite ugly html code, fix later
 
 @app.route('/notes/post',methods=['POST'])
 def post_note():
@@ -106,8 +106,8 @@ def update_note(title):
         return flask.jsonify({"error": "No such note exists"}), 404
     
      
-    input = flask.request.get_json()
-    if 'title' in input:
+    input = flask.request.get_json() #if this wasnt localhost user could look up any title of other users (which is bad)
+    if 'title' in input:             # but it is on localhost! so its obv not a problem. maybe implement cookies for funzies?
         cur.execute("UPDATE tab SET title = ? WHERE title = ?", (input['title'], title))
     if 'content' in input:
         cur.execute("UPDATE tab SET content = ? WHERE title = ?", (input['content'], title))
@@ -119,7 +119,7 @@ def update_note(title):
     return flask.redirect('/notes')
 
 @app.route('/notes/delete/<string:title>',methods=['DELETE'])
-def delete_note(title):
+def delete_note(title): 
     conn = get_db()
     cur = conn.cursor()
     cur.execute("SELECT * FROM tab WHERE title = ?",(title,))

@@ -13,25 +13,25 @@
 function submitUpdate(e) {
     e.preventDefault();
     const update_title = document.getElementById('update-title').value;
-    const title = document.getElementById('new-title').value;
+    const title = document.getElementById('new-title').value;    // getting user inputs
     const body = {};
     const content = document.getElementById('new-content').value;
     const category = document.getElementById('new-category').value;
     if (title) body.title = title;
     if (content) body.content = content;
     if (category) body.category = category;
-    fetch('/notes/' + encodeURIComponent(update_title), {
+    fetch('/notes/' + encodeURIComponent(update_title), { //redirecting to update_note(update_title)
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
-    }).then(() => window.location.href = '/notes');
+    }).then(() => window.location.href = '/notes');  // redirect back
 }
 function submitDelete(e) {
     e.preventDefault();
-    const title = document.getElementById('delete-title').value;
-    fetch('/notes/delete/' + encodeURIComponent(title), {
+    const title = document.getElementById('delete-title').value; // get value
+    fetch('/notes/delete/' + encodeURIComponent(title), { //redirect to delete_note(title)
         method: 'DELETE'
-    }).then(() => window.location.href = '/notes');
+    }).then(() => window.location.href = '/notes'); 
 }
 </script>
 </html>
