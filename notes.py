@@ -60,13 +60,23 @@ def note_display():
     conn.close()        # closing the connection
     return """
             <html>
-            <form method = "POST" action = '/notes/post'>
-                Title <input type = "text" name = "title">
+            <form method="POST" action='/notes/post'>
+                Title <input type="text" name="title">
                 <br>
-                Content <input type = "text" name = "content">
+                Content <input type="text" name="content">
                 <br>
-                Category<input type = "text" name = "category">
-                <button type = "submit"> Send </button>
+                Category <input type="text" name="category">
+                <button type="submit"> Send </button>
+            </form>
+            <form id="update-form" onsubmit="submitUpdate(event)">
+                Update note - Current title <input type="text" id="update-title">
+                New content <input type="text" id="update-content">
+                New category <input type="text" id="update-category">
+                <button type="submit"> Update </button>
+            </form>
+            <form id="delete-form" onsubmit="submitDelete(event)">
+                Delete note - Title <input type="text" id="delete-title">
+                <button type="submit"> Delete </button>
             </form>
             </html>
              """ + flask.render_template("note_mainpage.html",notes=displayed_notes)
