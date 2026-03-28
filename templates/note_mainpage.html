@@ -9,4 +9,27 @@
         </div>
     {% endfor %}
 </body>
+<script>
+function submitUpdate(e) {
+    e.preventDefault();
+    const title = document.getElementById('update-title').value;
+    const body = {};
+    const content = document.getElementById('update-content').value;
+    const category = document.getElementById('update-category').value;
+    if (content) body.content = content;
+    if (category) body.category = category;
+    fetch('/notes/' + encodeURIComponent(title), {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+    }).then(() => window.location.href = '/notes');
+}
+function submitDelete(e) {
+    e.preventDefault();
+    const title = document.getElementById('delete-title').value;
+    fetch('/notes/delete/' + encodeURIComponent(title), {
+        method: 'DELETE'
+    }).then(() => window.location.href = '/notes');
+}
+</script>
 </html>
