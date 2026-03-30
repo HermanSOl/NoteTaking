@@ -1,20 +1,82 @@
 <html>
 <body>
+    <!-- HOW THIS WORKS:
+        USER IS MET WITH A LIST OF NOTES
+        THEY CAN ADD A NOTE 
+        THE FORM FOR EDITING A NOTE IS HIDDEN UNTIL USER HITS update BUTTON ON NOTE
+        THE next lines : 32 - 44, 49 - 58, 62 - 67 were done with CLAUDE AI--> 
+
     <h1>My notes</h1>
+
+    <form method="POST" action='/notes/post'>                  
+        Title <input type="text" name="title" required>
+        <br>
+        Content <input type="text" name="content">
+        <br>
+        Category <input type="text" name="category">
+        <br>
+        Enjoyment (1-5, optional) <input type="number" name="enjoyment" min="1" max="5">
+        <button type="submit">Add Note</button>
+    </form>
+
+    <form id="update-form" onsubmit="submitUpdate(event)" style="display:none;">
+        <input type="hidden" id="edit-id">
+        New title <input type="text" id="new-title">
+        New content <input type="text" id="new-content">
+        New category <input type="text" id="new-category">
+        New enjoyment (1-5, optional) <input type="number" id="new-enjoyment" min="1" max="5">
+        <button type="submit">Update</button>
+        <button type="button" onclick="cancelEdit()">Cancel</button>
+    </form>
+
     {% for note in notes %}
-        <div style="border: 1px solid black;" class="{{note[3]}}">  <!-- We can worry about the style of this later-->
-            <h2>{{note[1]}}</h2>
-            <p>{{note[2]}}</p>
+        <div style="border: 1px solid black;" class="{{ note[3] or '' }}"
+             data-id="{{ note[0] }}"
+             data-title="{{ note[1] or '' }}"
+             data-content="{{ note[2] or '' }}"
+             data-category="{{ note[3] or '' }}"
+             data-enjoyment="{{ note[6] or '' }}">  <!-- We can worry about the style of this later-->
+            <h2>{{ note[1] }}</h2>
+            <p>{{ note[2] }}</p>
             <small>Created: {{ note[4] }} | Updated: {{ note[5] }}{% if note[6] %} | Enjoyment: {{ note[6] }}/5{% endif %}</small>
+            <br>
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
         </div>
     {% endfor %}
 </body>
 <script>
+document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const div = this.closest('div');
+        document.getElementById('edit-id').value = div.dataset.id;
+        document.getElementById('new-title').value = div.dataset.title;
+        document.getElementById('new-content').value = div.dataset.content;
+        document.getElementById('new-category').value = div.dataset.category;
+        document.getElementById('new-enjoyment').value = div.dataset.enjoyment;
+        document.getElementById('update-form').style.display = 'block';
+        document.getElementById('update-form').scrollIntoView();
+    });
+});
+
+document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const id = this.closest('div').dataset.id;
+        fetch('/notes/delete/' + id, { method: 'DELETE' })
+            .then(() => window.location.href = '/notes');
+    });
+});
+
+function cancelEdit() {
+    document.getElementById('update-form').reset();
+    document.getElementById('update-form').style.display = 'none';
+}
+
 function submitUpdate(e) {
     e.preventDefault();
-    const update_title = document.getElementById('update-title').value;
-    const title = document.getElementById('new-title').value;    // getting user inputs
+    const id = document.getElementById('edit-id').value;
     const body = {};
+    const title = document.getElementById('new-title').value;
     const content = document.getElementById('new-content').value;
     const category = document.getElementById('new-category').value;
     const enjoyment = document.getElementById('new-enjoyment').value;
@@ -22,18 +84,11 @@ function submitUpdate(e) {
     if (content) body.content = content;
     if (category) body.category = category;
     if (enjoyment) body.enjoyment = parseInt(enjoyment);
-    fetch('/notes/' + encodeURIComponent(update_title), { //redirecting to update_note(update_title)
+    fetch('/notes/' + id, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
-    }).then(() => window.location.href = '/notes');  // redirect back
-}
-function submitDelete(e) {
-    e.preventDefault();
-    const title = document.getElementById('delete-title').value; // get value
-    fetch('/notes/delete/' + encodeURIComponent(title), { //redirect to delete_note(title)
-        method: 'DELETE'
-    }).then(() => window.location.href = '/notes'); 
+    }).then(() => window.location.href = '/notes');
 }
 </script>
 </html>

@@ -62,34 +62,8 @@ def note_display():
     else:
         cur.execute("SELECT * FROM tab ORDER BY created_at DESC")
         displayed_notes = cur.fetchall()
-    conn.close()        # closing the connection 
-    return """
-            <html>
-            <form method="POST" action='/notes/post'>
-                Title <input type="text" name="title">   
-                <br>
-                Content <input type="text" name="content">
-                <br>
-                Category <input type="text" name="category">
-                <br>
-                Enjoyment (1-5, optional) <input type="number" name="enjoyment" min="1" max="5">
-                <button type="submit"> Send </button>
-            </form>
-            <form id="update-form" onsubmit="submitUpdate(event)">
-                Update note - Current title <input type="text" id="update-title">
-                New title <input type = "text" id = "new-title">
-                New content <input type="text" id="new-content">
-                New category <input type="text" id="new-category">
-                New enjoyment (1-5, optional) <input type="number" id="new-enjoyment" min="1" max="5">
-                <button type="submit"> Update </button>
-            </form>
-            <form id="delete-form" onsubmit="submitDelete(event)">
-                Delete note - Title <input type="text" id="delete-title">
-                <button type="submit"> Delete </button>
-            </form>
-            </html>
-             """ + flask.render_template("note_mainpage.html",notes=displayed_notes)
-    # above is quite ugly html code, fix later
+    conn.close()
+    return flask.render_template("note_mainpage.html", notes=displayed_notes)
 
 @app.route('/notes/post',methods=['POST'])
 def post_note():
@@ -106,42 +80,41 @@ def post_note():
     conn.commit()
     return flask.redirect('/notes')
 
-@app.route('/notes/<string:title>',methods=['PUT'])
-def update_note(title):
+@app.route('/notes/<int:id>',methods=['PUT'])
+def update_note(id):
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM tab WHERE title = ?",(title,))
+    cur.execute("SELECT * FROM tab WHERE id = ?", (id,))
     if not cur.fetchall():
         conn.close()
         return flask.jsonify({"error": "No such note exists"}), 404
-    
-     
-    input = flask.request.get_json() #if this wasnt localhost user could look up any title of other users (which is bad)
+
+    input = flask.request.get_json() #if this wasnt localhost user could look up any note of other users (which is bad)
     now = datetime.now().strftime("%Y-%m-%d")  # but it is on localhost! so its obv not a problem. maybe implement cookies for funzies?
     if 'title' in input:
-        cur.execute("UPDATE tab SET title = ? WHERE title = ?", (input['title'], title))
+        cur.execute("UPDATE tab SET title = ? WHERE id = ?", (input['title'], id))
     if 'content' in input:
-        cur.execute("UPDATE tab SET content = ? WHERE title = ?", (input['content'], title))
+        cur.execute("UPDATE tab SET content = ? WHERE id = ?", (input['content'], id))
     if 'category' in input:
-        cur.execute("UPDATE tab SET category = ? WHERE title = ?", (input['category'], title))
+        cur.execute("UPDATE tab SET category = ? WHERE id = ?", (input['category'], id))
     if 'enjoyment' in input:
-        cur.execute("UPDATE tab SET enjoyment = ? WHERE title = ?", (input['enjoyment'], title))
-    cur.execute("UPDATE tab SET updated_at = ? WHERE title = ?", (now, title))
+        cur.execute("UPDATE tab SET enjoyment = ? WHERE id = ?", (input['enjoyment'], id))
+    cur.execute("UPDATE tab SET updated_at = ? WHERE id = ?", (now, id))
 
     conn.commit()
     conn.close()
     return flask.redirect('/notes')
 
-@app.route('/notes/delete/<string:title>',methods=['DELETE'])
-def delete_note(title): 
+@app.route('/notes/delete/<int:id>',methods=['DELETE'])
+def delete_note(id):
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM tab WHERE title = ?",(title,))
+    cur.execute("SELECT * FROM tab WHERE id = ?", (id,))
     if not cur.fetchall():
         conn.close()
         return flask.jsonify({"error": "No such note exists"}), 404
 
-    cur.execute("DELETE FROM tab WHERE title = ?", (title,))
+    cur.execute("DELETE FROM tab WHERE id = ?", (id,))
     conn.commit()
     conn.close()
     return flask.redirect('/notes')
