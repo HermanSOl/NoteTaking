@@ -5,7 +5,7 @@
         <div style="border: 1px solid black;" class="{{note[3]}}">  <!-- We can worry about the style of this later-->
             <h2>{{note[1]}}</h2>
             <p>{{note[2]}}</p>
-            <small>Created: {{ note[4] }} | Updated: {{ note[5] }}</small>
+            <small>Created: {{ note[4] }} | Updated: {{ note[5] }}{% if note[6] %} | Enjoyment: {{ note[6] }}/5{% endif %}</small>
         </div>
     {% endfor %}
 </body>
@@ -17,9 +17,11 @@ function submitUpdate(e) {
     const body = {};
     const content = document.getElementById('new-content').value;
     const category = document.getElementById('new-category').value;
+    const enjoyment = document.getElementById('new-enjoyment').value;
     if (title) body.title = title;
     if (content) body.content = content;
     if (category) body.category = category;
+    if (enjoyment) body.enjoyment = parseInt(enjoyment);
     fetch('/notes/' + encodeURIComponent(update_title), { //redirecting to update_note(update_title)
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},

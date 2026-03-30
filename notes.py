@@ -21,13 +21,13 @@ def change_content(cur,content):
 def change_category(cur,category):
         cur.execute("UPDATE tab SET category = ? WHERE title = ? AND content = ? AND category = ?",(category,self.title,self.content,self.category))
 
-def create_note(cur,title,content,category,created):
-    # if(1 != 1): 
+def create_note(cur,title,content,category,created,enjoyment=None):
+    # if(1 != 1):
     #     #some condition              # TODO: take care of the case where title,content or category are invalid
     cur.execute("SELECT * FROM tab WHERE title = ? AND content = ?", (title,content))
     if cur.fetchall():
         return "Already exists"
-    cur.execute("INSERT OR IGNORE INTO tab (title,content,category,created_at,updated_at) VALUES (?,?,?,?,?)",(title,content,category,created,created)) 
+    cur.execute("INSERT OR IGNORE INTO tab (title,content,category,created_at,updated_at,enjoyment) VALUES (?,?,?,?,?,?)",(title,content,category,created,created,enjoyment))
 
 def get_db():
     copy = sqlite3.connect(DB_NAME)
@@ -39,7 +39,12 @@ def get_db():
 def init_db():
     tab = sqlite3.connect(DB_NAME)
     cur = tab.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS tab (id INTEGER PRIMARY KEY, title TEXT,content TEXT, category TEXT,created_at DATE,updated_at DATE)")
+    cur.execute("CREATE TABLE IF NOT EXISTS tab (id INTEGER PRIMARY KEY, title TEXT,content TEXT, category TEXT,created_at DATE,updated_at DATE, enjoyment INTEGER)")
+    try:
+        cur.execute("ALTER TABLE tab ADD COLUMN enjoyment INTEGER")
+    except sqlite3.OperationalError:
+        pass  # column already exists
+    tab.commit()
     tab.close()
 
 init_db()
@@ -66,13 +71,16 @@ def note_display():
                 Content <input type="text" name="content">
                 <br>
                 Category <input type="text" name="category">
-                <button type="submit"> Send </button>          
+                <br>
+                Enjoyment (1-5, optional) <input type="number" name="enjoyment" min="1" max="5">
+                <button type="submit"> Send </button>
             </form>
             <form id="update-form" onsubmit="submitUpdate(event)">
                 Update note - Current title <input type="text" id="update-title">
                 New title <input type = "text" id = "new-title">
                 New content <input type="text" id="new-content">
                 New category <input type="text" id="new-category">
+                New enjoyment (1-5, optional) <input type="number" id="new-enjoyment" min="1" max="5">
                 <button type="submit"> Update </button>
             </form>
             <form id="delete-form" onsubmit="submitDelete(event)">
@@ -88,11 +96,13 @@ def post_note():
     now = datetime.now().strftime("%Y-%m-%d")
 
     note = flask.request.form['title']
-    content = flask.request.form['content']
-    category = flask.request.form['category']
+    content = flask.request.form.get('content', '').strip() or None
+    category = flask.request.form.get('category', '').strip() or None
+    enjoyment_raw = flask.request.form.get('enjoyment', '').strip()
+    enjoyment = int(enjoyment_raw) if enjoyment_raw else None
     conn = get_db()                            # JUST A PROTOTYPE FOR NOW. ONLY TAKES IN TITLE
     cur = conn.cursor()
-    create_note(cur,note,content,category,now)
+    create_note(cur,note,content,category,now,enjoyment)
     conn.commit()
     return flask.redirect('/notes')
 
@@ -113,6 +123,8 @@ def update_note(title):
         cur.execute("UPDATE tab SET content = ? WHERE title = ?", (input['content'], title))
     if 'category' in input:
         cur.execute("UPDATE tab SET category = ? WHERE title = ?", (input['category'], title))
+    if 'enjoyment' in input:
+        cur.execute("UPDATE tab SET enjoyment = ? WHERE title = ?", (input['enjoyment'], title))
 
     conn.commit()
     conn.close()
