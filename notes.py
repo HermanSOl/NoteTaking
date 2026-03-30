@@ -15,11 +15,11 @@ DB_NAME = os.getenv("DB_NAME")
 def clear_db(cur):
      cur.execute("DROP TABLE tab")
 
-def change_content(cur,content):
-        cur.execute("UPDATE tab SET content = ? WHERE title = ? AND content = ? AND category = ?",(content,self.title,self.content,self.category))
+def change_content(cur, title, new_content):
+    cur.execute("UPDATE tab SET content = ? WHERE title = ?", (new_content, title))
 
-def change_category(cur,category):
-        cur.execute("UPDATE tab SET category = ? WHERE title = ? AND content = ? AND category = ?",(category,self.title,self.content,self.category))
+def change_category(cur, title, new_category):
+    cur.execute("UPDATE tab SET category = ? WHERE title = ?", (new_category, title))
 
 def create_note(cur,title,content,category,created,enjoyment=None):
     # if(1 != 1):
@@ -117,7 +117,8 @@ def update_note(title):
     
      
     input = flask.request.get_json() #if this wasnt localhost user could look up any title of other users (which is bad)
-    if 'title' in input:             # but it is on localhost! so its obv not a problem. maybe implement cookies for funzies?
+    now = datetime.now().strftime("%Y-%m-%d")  # but it is on localhost! so its obv not a problem. maybe implement cookies for funzies?
+    if 'title' in input:
         cur.execute("UPDATE tab SET title = ? WHERE title = ?", (input['title'], title))
     if 'content' in input:
         cur.execute("UPDATE tab SET content = ? WHERE title = ?", (input['content'], title))
@@ -125,6 +126,7 @@ def update_note(title):
         cur.execute("UPDATE tab SET category = ? WHERE title = ?", (input['category'], title))
     if 'enjoyment' in input:
         cur.execute("UPDATE tab SET enjoyment = ? WHERE title = ?", (input['enjoyment'], title))
+    cur.execute("UPDATE tab SET updated_at = ? WHERE title = ?", (now, title))
 
     conn.commit()
     conn.close()
