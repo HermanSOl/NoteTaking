@@ -1,12 +1,16 @@
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.25rem;
+.canvas {
+  position: relative;
+  width: 100vw;
+  min-height: calc(100vh - 80px);
+  overflow: hidden;
 }
 
 .status {
-  color: #888;
+  color: #000;
+  font-weight: 700;
   text-align: center;
-  margin-top: 2rem;
-  font-size: 0.95rem;
+  margin-top: 4rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
