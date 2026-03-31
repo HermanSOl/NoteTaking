@@ -1,0 +1,247 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 1, 12, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.modal {
+  background: rgba(10, 8, 28, 0.85);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(160, 80, 255, 0.2);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 520px;
+  /* Aurora glow around the modal */
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.08),
+    0 32px 80px rgba(0, 0, 0, 0.7),
+    0 0 80px rgba(139, 40, 220, 0.15);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Subtle aurora shimmer across the top of the modal */
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(139, 40, 220, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.6rem 1.75rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.modalTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  /* Aurora gradient on the modal title too */
+  background: linear-gradient(110deg, #c084fc, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.closeBtn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #6060a0;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.closeBtn:hover {
+  background: rgba(200, 80, 255, 0.12);
+  border-color: rgba(200, 80, 255, 0.3);
+  color: #e0d0ff;
+}
+
+.form {
+  padding: 1.5rem 1.75rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6858a8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.optional {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #38346a;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.input,
+.textarea {
+  background: rgba(5, 4, 18, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  color: #e0e0f8;
+  font-size: 0.95rem;
+  font-family: inherit;
+  padding: 0.72rem 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  resize: none;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1), 0 0 16px rgba(168, 85, 247, 0.1);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #2e2a52;
+}
+
+/* Enjoyment slider */
+.enjoymentValue {
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #c084fc, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  /* Gradient track: dark on left, aurora on right */
+  background: linear-gradient(
+    90deg,
+    rgba(168, 85, 247, 0.6) 0%,
+    rgba(34, 211, 238, 0.6) 100%
+  );
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c084fc, #22d3ee);
+  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.2), 0 0 16px rgba(192, 132, 252, 0.5);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 5px rgba(192, 132, 252, 0.2), 0 0 24px rgba(192, 132, 252, 0.6);
+}
+
+.sliderTicks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: #38346a;
+  padding: 0 2px;
+}
+
+.error {
+  font-size: 0.85rem;
+  color: #fb7185;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.cancelBtn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #6060a0;
+  border-radius: 12px;
+  padding: 0.62rem 1.25rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.cancelBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #c0c0e0;
+}
+
+.saveBtn {
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  border: none;
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.62rem 1.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: opacity 0.15s, box-shadow 0.2s;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+}
+
+.saveBtn:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 32px rgba(124, 58, 237, 0.6);
+}
+
+.saveBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
