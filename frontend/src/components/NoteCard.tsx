@@ -15,20 +15,14 @@ export default function NoteCard({ note }: Props) {
         <h2 className={styles.title}>{note.title}</h2>
         {note.category && <span className={styles.category}>{note.category}</span>}
       </div>
-
+      
       {/* Body: only rendered if the note has content */}
       {note.content && <p className={styles.content}>{note.content}</p>}
-
       <div className={styles.footer}>
-        {/* Always show created date */}
         <span className={styles.date}>Created: {note.created_at}</span>
-
-        {/* Only show updated date if it differs from created date */}
         {note.updated_at !== note.created_at && (
           <span className={styles.date}>Updated: {note.updated_at}</span>
         )}
-
-        {/* Star rating: fills stars up to enjoyment value, empty stars for the rest (out of 5) */}
         {note.enjoyment && (
           <span className={styles.enjoyment}>{'★'.repeat(note.enjoyment)}{'☆'.repeat(5 - note.enjoyment)}</span>
         )}
