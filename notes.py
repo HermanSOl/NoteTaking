@@ -65,6 +65,11 @@ def note_display():
         cur.execute("SELECT * FROM tab ORDER BY created_at DESC")
         displayed_notes = cur.fetchall()
     conn.close()
+
+    if flask.request.headers.get('Accept') == 'application/json':     # reroute the api to go to frontend
+        keys = ['id', 'title', 'content', 'category', 'created_at', 'updated_at', 'enjoyment']
+        return flask.jsonify([dict(zip(keys, row)) for row in displayed_notes])
+
     return flask.render_template("note_mainpage.html", notes=displayed_notes)
 
 @app.route('/notes/post',methods=['POST'])
