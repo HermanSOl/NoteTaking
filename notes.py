@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import flask
+from flask_cors import CORS
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -50,6 +51,7 @@ def init_db():
 init_db()
 
 app = flask.Flask(__name__)
+CORS(app)
 @app.route('/notes',methods=["GET"])
 def note_display():
     conn = get_db()         # we need to get only one connection to db per one request
