@@ -1,9 +1,7 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(2, 1, 12, 0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,96 +10,73 @@
 }
 
 .modal {
-  background: rgba(10, 8, 28, 0.85);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  border: 1px solid rgba(160, 80, 255, 0.2);
-  border-radius: 24px;
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 4px;
   width: 100%;
   max-width: 520px;
-  /* Aurora glow around the modal */
-  box-shadow:
-    0 0 0 1px rgba(34, 211, 238, 0.08),
-    0 32px 80px rgba(0, 0, 0, 0.7),
-    0 0 80px rgba(139, 40, 220, 0.15);
+  box-shadow: 8px 8px 0 #000;
   overflow: hidden;
-  position: relative;
-}
-
-/* Subtle aurora shimmer across the top of the modal */
-.modal::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 120px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(139, 40, 220, 0.15) 0%, transparent 70%);
-  pointer-events: none;
 }
 
 .modalHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.6rem 1.75rem 0;
-  position: relative;
-  z-index: 1;
+  padding: 1.25rem 1.5rem;
+  background: #083D77;
+  border-bottom: 3px solid #000;
 }
 
 .modalTitle {
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  /* Aurora gradient on the modal title too */
-  background: linear-gradient(110deg, #c084fc, #22d3ee);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #EBEBD3;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .closeBtn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #6060a0;
+  background: #F4D35E;
+  border: 2px solid #000;
+  color: #000;
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: 2px;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  box-shadow: 2px 2px 0 #000;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .closeBtn:hover {
-  background: rgba(200, 80, 255, 0.12);
-  border-color: rgba(200, 80, 255, 0.3);
-  color: #e0d0ff;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #000;
 }
 
 .form {
-  padding: 1.5rem 1.75rem 1.75rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  position: relative;
-  z-index: 1;
+  gap: 1.1rem;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .label {
   font-size: 0.75rem;
-  font-weight: 700;
-  color: #6858a8;
+  font-weight: 900;
+  color: #000;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -109,46 +84,44 @@
 
 .optional {
   font-size: 0.7rem;
-  font-weight: 400;
-  color: #38346a;
+  font-weight: 500;
+  color: #666;
   text-transform: none;
   letter-spacing: 0;
 }
 
 .input,
 .textarea {
-  background: rgba(5, 4, 18, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 12px;
-  color: #e0e0f8;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 2px;
+  color: #000;
   font-size: 0.95rem;
   font-family: inherit;
-  padding: 0.72rem 1rem;
+  font-weight: 500;
+  padding: 0.65rem 0.9rem;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: box-shadow 0.1s;
   resize: none;
+  box-shadow: 3px 3px 0 #000;
 }
 
 .input:focus,
 .textarea:focus {
-  border-color: rgba(168, 85, 247, 0.5);
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1), 0 0 16px rgba(168, 85, 247, 0.1);
+  box-shadow: 4px 4px 0 #DA4167;
 }
 
 .input::placeholder,
 .textarea::placeholder {
-  color: #2e2a52;
+  color: #aaa;
+  font-weight: 400;
 }
 
-/* Enjoyment slider */
 .enjoymentValue {
   margin-left: auto;
   font-size: 0.85rem;
-  font-weight: 700;
-  background: linear-gradient(90deg, #c084fc, #22d3ee);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-weight: 900;
+  color: #DA4167;
   text-transform: none;
   letter-spacing: 0;
 }
@@ -157,46 +130,46 @@
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 5px;
-  border-radius: 999px;
-  /* Gradient track: dark on left, aurora on right */
-  background: linear-gradient(
-    90deg,
-    rgba(168, 85, 247, 0.6) 0%,
-    rgba(34, 211, 238, 0.6) 100%
-  );
+  height: 6px;
+  border-radius: 0;
+  background: #000;
   outline: none;
   cursor: pointer;
+  border: 2px solid #000;
 }
 
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #c084fc, #22d3ee);
-  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.2), 0 0 16px rgba(192, 132, 252, 0.5);
+  width: 22px;
+  height: 22px;
+  border-radius: 0;
+  background: #FFE600;
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0 #000;
   cursor: pointer;
-  transition: box-shadow 0.2s;
 }
 
 .slider::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 0 5px rgba(192, 132, 252, 0.2), 0 0 24px rgba(192, 132, 252, 0.6);
+  background: #DA4167;
 }
 
 .sliderTicks {
   display: flex;
   justify-content: space-between;
   font-size: 0.68rem;
-  color: #38346a;
+  font-weight: 700;
+  color: #000;
   padding: 0 2px;
+  text-transform: uppercase;
 }
 
 .error {
   font-size: 0.85rem;
-  color: #fb7185;
+  font-weight: 700;
+  color: #FF2D55;
   margin: 0;
+  text-transform: uppercase;
 }
 
 .actions {
@@ -207,41 +180,54 @@
 }
 
 .cancelBtn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #6060a0;
-  border-radius: 12px;
-  padding: 0.62rem 1.25rem;
-  font-size: 0.9rem;
+  background: #fff;
+  border: 2px solid #000;
+  color: #000;
+  border-radius: 2px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 900;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 3px 3px 0 #000;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .cancelBtn:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #c0c0e0;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000;
 }
 
 .saveBtn {
-  background: linear-gradient(135deg, #7c3aed, #06b6d4);
-  border: none;
-  color: #fff;
-  border-radius: 12px;
-  padding: 0.62rem 1.6rem;
-  font-size: 0.9rem;
-  font-weight: 700;
+  background: #F4D35E;
+  border: 2px solid #000;
+  color: #000;
+  border-radius: 2px;
+  padding: 0.6rem 1.6rem;
+  font-size: 0.85rem;
+  font-weight: 900;
   cursor: pointer;
-  letter-spacing: 0.02em;
-  transition: opacity 0.15s, box-shadow 0.2s;
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 3px 3px 0 #000;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .saveBtn:hover {
-  opacity: 0.9;
-  box-shadow: 0 0 32px rgba(124, 58, 237, 0.6);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000;
+  background: #DA4167;
+  color: #fff;
+}
+
+.saveBtn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 #000;
 }
 
 .saveBtn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+  transform: none;
 }
