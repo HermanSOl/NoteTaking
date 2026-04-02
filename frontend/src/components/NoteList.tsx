@@ -44,6 +44,11 @@ export default function NoteList({ refreshKey }: Props) {
     setFocusOrder(prev => [...prev.filter(x => x !== id), id]);
   }
 
+  function handleDelete(id: number) {
+    setNotes(prev => prev.filter(n => n.id !== id));
+    setFocusOrder(prev => prev.filter(x => x !== id));
+  }
+
   if (loading) return <p className={styles.status}>Loading notes...</p>;
   if (error) return <p className={styles.status}>Error: {error}</p>;
   if (notes.length === 0) return <p className={styles.status}>No notes yet. Add one above!</p>;
@@ -56,6 +61,7 @@ export default function NoteList({ refreshKey }: Props) {
             key={note.id}
             note={note}
             onEdit={setEditingNote}
+            onDelete={handleDelete}
             onFocus={handleFocus}
             zIndex={focusOrder.indexOf(note.id) + 1}
           />

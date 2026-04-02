@@ -37,6 +37,7 @@ function loadHeight(id: number): number | 'auto' {
 interface Props {
   note: Note;
   onEdit: (note: Note) => void;
+  onDelete: (id: number) => void;
   onFocus: (id: number) => void;
   zIndex: number;
 }
@@ -54,7 +55,7 @@ const HANDLES: { dir: ResizeDir; cls: string; cursor: string }[] = [
   { dir: { dx: -1, dy:  0 }, cls: styles.handleW,  cursor: 'ew-resize'   },
 ];
 
-export default function NoteCard({ note, onEdit, onFocus, zIndex }: Props) {
+export default function NoteCard({ note, onEdit, onDelete, onFocus, zIndex }: Props) {
   const { bg, text } = ACCENTS[note.id % ACCENTS.length];
 
   const [pos,    setPos]    = useState(() => loadPos(note.id));
@@ -191,6 +192,15 @@ export default function NoteCard({ note, onEdit, onFocus, zIndex }: Props) {
             )}
             <button className={styles.editBtn} onClick={() => onEdit(note)}>
               Edit
+            </button>
+            <button
+              className={styles.deleteBtn}
+              onClick={() => {
+                fetch(`/notes/delete/${note.id}`, { method: 'DELETE' })
+                  .then(res => { if (res.ok) onDelete(note.id); });
+              }}
+            >
+              Delete
             </button>
           </div>
         </div>
