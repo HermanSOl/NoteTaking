@@ -75,3 +75,28 @@
 .connectBtnActive:hover {
   box-shadow: 6px 6px 0 #F4D35E;
 }
+
+.snapshotsBtn {
+  background: #F78764;
+  border: 3px solid #000;
+  color: #000;
+  font-size: 1rem;
+  font-weight: 900;
+  padding: 0.65rem 1.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 #000;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.snapshotsBtn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #000;
+}
+
+.snapshotsBtn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #000;
+}

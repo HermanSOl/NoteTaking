@@ -12,9 +12,10 @@ interface Props {
   refreshKey: number;  // we need this to save notes properly
   paintColor: Accent | null;
   connectMode: boolean;
+  layoutKey: number;   // incrementing this remounts all cards (re-reads localStorage)
 }
 
-export default function NoteList({ refreshKey, paintColor, connectMode }: Props) {
+export default function NoteList({ refreshKey, paintColor, connectMode, layoutKey }: Props) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,6 +59,14 @@ export default function NoteList({ refreshKey, paintColor, connectMode }: Props)
   useEffect(() => {
     if (!connectMode) setConnectSource(null);
   }, [connectMode]);
+
+  // When a snapshot is loaded (layoutKey changes), re-read connections from localStorage
+  useEffect(() => {
+    if (layoutKey === 0) return;
+    const saved = localStorage.getItem('note-connections');
+    setConnections(saved ? JSON.parse(saved) : []);
+    setCardBounds({});
+  }, [layoutKey]);
 
   function handleFocus(id: number) {
     setFocusOrder(prev => [...prev.filter(x => x !== id), id]);
@@ -168,7 +177,7 @@ export default function NoteList({ refreshKey, paintColor, connectMode }: Props)
 
         {notes.map(note => (
           <NoteCard
-            key={note.id}
+            key={`${note.id}-${layoutKey}`}
             note={note}
             onEdit={setEditingNote}
             onDelete={handleDelete}
