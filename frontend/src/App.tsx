@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import NoteList from './components/NoteList';
 import CreateModal from './components/CreateModal';
+import Sidebar, { type Accent } from './components/Sidebar';
 import styles from './App.module.css';
 
 export default function App() {
   const [creating, setCreating] = useState(false);
-  // Incrementing this triggers NoteList to refetch
   const [refreshKey, setRefreshKey] = useState(0);
+  const [paintColor, setPaintColor] = useState<Accent | null>(null);
 
   function handleSaved() {
     setRefreshKey(k => k + 1);
@@ -14,6 +15,7 @@ export default function App() {
 
   return (
     <>
+      <Sidebar selected={paintColor} onSelect={setPaintColor} />
       <div className={styles.page}>
         <header className={styles.header}>
           <button className={styles.newBtn} onClick={() => setCreating(true)}>
@@ -21,7 +23,7 @@ export default function App() {
           </button>
         </header>
         <main className={styles.main}>
-          <NoteList refreshKey={refreshKey} />
+          <NoteList refreshKey={refreshKey} paintColor={paintColor} />
         </main>
       </div>
 

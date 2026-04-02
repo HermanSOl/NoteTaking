@@ -5,6 +5,11 @@
   overflow: hidden;
 }
 
+.paintMode,
+.paintMode * {
+  cursor: crosshair !important;
+}
+
 .status {
   color: #000;
   font-weight: 700;

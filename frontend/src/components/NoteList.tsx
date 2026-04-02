@@ -3,12 +3,14 @@ import type { Note } from '../types';
 import NoteCard from './NoteCard';
 import EditModal from './EditModal';
 import styles from './NoteList.module.css';
+import type { Accent } from './Sidebar';
 
 interface Props {
   refreshKey: number;  // we need this to save notes properly
+  paintColor: Accent | null;
 }
 
-export default function NoteList({ refreshKey }: Props) {
+export default function NoteList({ refreshKey, paintColor }: Props) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +57,7 @@ export default function NoteList({ refreshKey }: Props) {
 
   return (
     <>
-      <div className={styles.canvas}> 
+      <div className={`${styles.canvas} ${paintColor ? styles.paintMode : ''}`}>
         {notes.map(note => (
           <NoteCard
             key={note.id}
@@ -63,6 +65,7 @@ export default function NoteList({ refreshKey }: Props) {
             onEdit={setEditingNote}
             onDelete={handleDelete}
             onFocus={handleFocus}
+            paintColor={paintColor}
             zIndex={focusOrder.indexOf(note.id) + 1}
           />
         ))}

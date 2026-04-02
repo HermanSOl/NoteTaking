@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import type { Note } from '../types';
 import styles from './NoteCard.module.css';
+import type { Accent } from './Sidebar';
 
 const ACCENTS = [
   { bg: '#DA4167', text: '#fff' },
@@ -39,6 +40,7 @@ interface Props {
   onEdit: (note: Note) => void;
   onDelete: (id: number) => void;
   onFocus: (id: number) => void;
+  paintColor: Accent | null;
   zIndex: number;
 }
 
@@ -55,8 +57,13 @@ const HANDLES: { dir: ResizeDir; cls: string; cursor: string }[] = [
   { dir: { dx: -1, dy:  0 }, cls: styles.handleW,  cursor: 'ew-resize'   },
 ];
 
-export default function NoteCard({ note, onEdit, onDelete, onFocus, zIndex }: Props) {
-  const { bg, text } = ACCENTS[note.id % ACCENTS.length];
+export default function NoteCard({ note, onEdit, onDelete, onFocus, paintColor, zIndex }: Props) {
+  const [colorOverride, setColorOverride] = useState<Accent | null>(() => {
+    const saved = localStorage.getItem(`note-color-${note.id}`);
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const { bg, text } = colorOverride ?? ACCENTS[note.id % ACCENTS.length];
 
   const [pos,    setPos]    = useState(() => loadPos(note.id));
   const [width,  setWidth]  = useState(() => loadWidth(note.id));
@@ -71,6 +78,11 @@ export default function NoteCard({ note, onEdit, onDelete, onFocus, zIndex }: Pr
   // ── Move ──────────────────────────────────────────────────────
   function handleMoveStart(e: React.MouseEvent) {
     if ((e.target as HTMLElement).closest('button, [data-handle]')) return;
+    if (paintColor) {
+      localStorage.setItem(`note-color-${note.id}`, JSON.stringify(paintColor));
+      setColorOverride(paintColor);
+      return;
+    }
     e.preventDefault();
     onFocus(note.id);
     setIsDragging(true);
@@ -196,8 +208,8 @@ export default function NoteCard({ note, onEdit, onDelete, onFocus, zIndex }: Pr
             <button
               className={styles.deleteBtn}
               onClick={() => {
-                fetch(`/notes/delete/${note.id}`, { method: 'DELETE' })
-                  .then(res => { if (res.ok) onDelete(note.id); });
+                onDelete(note.id);
+                fetch(`/notes/delete/${note.id}`, { method: 'DELETE' });
               }}
             >
               Delete
