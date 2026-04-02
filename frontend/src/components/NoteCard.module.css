@@ -195,3 +195,11 @@
 .handleS  { bottom: -7px; left: calc(50% - 7px); }
 .handleE  { top: calc(50% - 7px); right: -7px; }
 .handleW  { top: calc(50% - 7px); left:  -7px; }
+
+.connectMode {
+  cursor: pointer !important;
+}
+
+.connectSelected {
+  box-shadow: 0 0 0 4px #F4D35E, 0 0 0 8px #000 !important;
+}

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { Note } from '../types';
 import styles from './NoteCard.module.css';
 import type { Accent } from './Sidebar';
@@ -35,6 +35,8 @@ function loadHeight(id: number): number | 'auto' {
   return saved ? Number(saved) : 'auto';
 }
 
+export type CardBounds = { x: number; y: number; w: number; h: number };
+
 interface Props {
   note: Note;
   onEdit: (note: Note) => void;
@@ -42,6 +44,10 @@ interface Props {
   onFocus: (id: number) => void;
   paintColor: Accent | null;
   zIndex: number;
+  onPositionChange?: (id: number, bounds: CardBounds) => void;
+  connectMode?: boolean;
+  onConnectClick?: (id: number) => void;
+  connectSelected?: boolean;
 }
 
 type ResizeDir = { dx: -1 | 0 | 1; dy: -1 | 0 | 1 };
@@ -57,7 +63,7 @@ const HANDLES: { dir: ResizeDir; cls: string; cursor: string }[] = [
   { dir: { dx: -1, dy:  0 }, cls: styles.handleW,  cursor: 'ew-resize'   },
 ];
 
-export default function NoteCard({ note, onEdit, onDelete, onFocus, paintColor, zIndex }: Props) {
+export default function NoteCard({ note, onEdit, onDelete, onFocus, paintColor, zIndex, onPositionChange, connectMode, onConnectClick, connectSelected }: Props) {
   const [colorOverride, setColorOverride] = useState<Accent | null>(() => {
     const saved = localStorage.getItem(`note-color-${note.id}`);
     return saved ? JSON.parse(saved) : null;
@@ -75,9 +81,19 @@ export default function NoteCard({ note, onEdit, onDelete, onFocus, paintColor, 
   const heightRef = useRef(height);
   const cardRef   = useRef<HTMLDivElement>(null);
 
+  // Report bounds to parent so connection lines can track card positions
+  useEffect(() => {
+    const h = cardRef.current?.offsetHeight ?? (typeof height === 'number' ? height : 120);
+    onPositionChange?.(note.id, { x: pos.x, y: pos.y, w: width, h });
+  }, [pos.x, pos.y, width, height]);
+
   // ── Move ──────────────────────────────────────────────────────
   function handleMoveStart(e: React.MouseEvent) {
     if ((e.target as HTMLElement).closest('button, [data-handle]')) return;
+    if (connectMode) {
+      onConnectClick?.(note.id);
+      return;
+    }
     if (paintColor) {
       localStorage.setItem(`note-color-${note.id}`, JSON.stringify(paintColor));
       setColorOverride(paintColor);
@@ -169,7 +185,7 @@ export default function NoteCard({ note, onEdit, onDelete, onFocus, paintColor, 
   return (
     <div
       ref={cardRef}
-      className={`${styles.card} ${isDragging ? styles.dragging : ''}`}
+      className={`${styles.card} ${isDragging ? styles.dragging : ''} ${connectMode ? styles.connectMode : ''} ${connectSelected ? styles.connectSelected : ''}`}
       style={{
         '--accent': bg,
         '--text': text,
