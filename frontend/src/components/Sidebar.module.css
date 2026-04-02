@@ -36,7 +36,8 @@
 }
 
 .toggleOpen {
-  background: #DA4167;
+  background: #000;
+  border-color: #F4D35E;
 }
 
 /* Color circles */
