@@ -21,3 +21,4 @@ Future Ideas:
 
 AGAIN, I AM OPEN TO CRITICISM AND FEEDBACK SUGGESTIONS AND JUST GENERAL THOUGHTS YOU HAVE. At the end of the day, we all want to learn and be better.
 Thank you for reading this.
+<img width="2550" height="1450" alt="image" src="https://github.com/user-attachments/assets/ef9c4dda-a3ed-4048-bbf1-b85bd96320d4" />
